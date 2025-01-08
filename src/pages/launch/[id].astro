@@ -1,0 +1,44 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getLatestLaunches, getLaunchById } from "../../services/spacex";
+
+const { id } = Astro.params;
+
+let launch;
+if (id) {
+  launch = await getLaunchById({ id });
+}
+
+// Only for the server
+// if (!id) {
+//   Astro.redirect("/");
+// }
+
+// const { data } = await getLaunchById({ id });
+// console.log(id);
+
+// This only works if I already know the quantity of
+// pages that I need to generate, It must always be
+// a finite number, I can't generate infinite pages
+// export async function getStaticPaths() {
+//   const launches = await getLatestLaunches();
+
+//   return launches.map((launch) => ({
+//     params: {
+//       id: launch.id,
+//     },
+//   }));
+// }
+---
+
+<Layout title={`Lanzamiento ${id}`}>
+  <article class="flex gap-y-4 flex-col">
+    <img
+      class="w-52 h-auto"
+      src={launch?.links?.patch.small}
+      alt={launch?.name}
+    />
+    <h2 class="text-4xl font-bold">Launch #{launch?.flight_number}</h2>
+    <p class="text-lg">{launch?.details}</p>
+  </article>
+</Layout>
